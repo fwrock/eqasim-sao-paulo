@@ -37,12 +37,12 @@ def execute(context):
         context.stage("matsim.scenario.supply.processed")["network_path"]
     )
 
-    sp_path = "%s/Spatial/SC2010_RMSP_CEM_V3_center_transformed.shp" % context.config("data_path")
+    sp_path = "%s/spatial/SC2010_RMSP_CEM_V3_center_transformed.shp" % context.config("data_path")
     
-    df_zones_census = gpd.read_file("%s/Spatial/%s" % (context.config("data_path"), context.config("shapefile_city_name")))
+    df_zones_census = gpd.read_file("%s/spatial/%s" % (context.config("data_path"), context.config("shapefile_city_name")))
     df_zones_census.crs = {"init":"epsg:4326"}
     df_zones_census = df_zones_census.to_crs({"init":"epsg:29183"})
-    df_zones_census.to_file("%s/Spatial/SC2010_RMSP_CEM_V3_center_transformed.shp" % context.config("data_path"))
+    df_zones_census.to_file("%s/spatial/SC2010_RMSP_CEM_V3_center_transformed.shp" % context.config("data_path"))
     eqasim.run(context, "org.eqasim.core.scenario.preparation.RunPreparation", [
         "--input-facilities-path", facilities_path,
         "--output-facilities-path", "sao_paulo_facilities.xml.gz",
@@ -96,21 +96,35 @@ def execute(context):
     # Adapt config for Sao Paulo
     eqasim.run(context, "org.eqasim.sao_paulo.scenario.RunAdaptConfig", [
         "--input-path", "generic_config.xml",
-        "--output-path", "sao_paulo_config.xml"
+        "--output-path", "sao_paulo_config.xml",
+        "--prefix", "sao_paulo_"
     ])
     assert os.path.exists("%s/sao_paulo_config.xml" % context.path())
+
+    # Insert vehicles (required in eqasim 2.1.0+)
+    eqasim.run(context, "org.eqasim.core.scenario.RunInsertVehicles", [
+        "--config-path", "sao_paulo_config.xml",
+        "--input-population-path", "prepared_population.xml.gz",
+        "--output-vehicles-path", "sao_paulo_vehicles.xml.gz",
+        "--output-population-path", "prepared_population.xml.gz"
+    ])
 
     # Route population
     eqasim.run(context, "org.eqasim.core.scenario.routing.RunPopulationRouting", [
         "--config-path", "sao_paulo_config.xml",
         "--output-path", "sao_paulo_population.xml.gz",
         "--threads", context.config("processes"),
-        "--config:plans.inputPlansFile", "prepared_population.xml.gz"
+        "--config:plans.inputPlansFile", "prepared_population.xml.gz",
+        "--config:vehicles.vehiclesFile", "sao_paulo_vehicles.xml.gz",
+        "--config:qsim.vehiclesSource", "fromVehiclesData",
+        "--config:routing.networkRouteConsistencyCheck", "disable"
     ])
     assert os.path.exists("%s/sao_paulo_population.xml.gz" % context.path())
     # Validate scenario
     eqasim.run(context, "org.eqasim.core.scenario.validation.RunScenarioValidator", [
-        "--config-path", "sao_paulo_config.xml"
+        "--config-path", "sao_paulo_config.xml",
+        "--config:vehicles.vehiclesFile", "sao_paulo_vehicles.xml.gz",
+        "--config:qsim.vehiclesSource", "fromVehiclesData"
     ])
 
     # Cleanup

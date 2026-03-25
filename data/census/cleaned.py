@@ -29,11 +29,11 @@ def execute(context):
     zone_id = df["zone_id"].values.tolist() 
 
     # Import shapefiles defining the different zones
-    center = gpd.read_file("%s/Spatial/SC2010_RMSP_CEM_V3_center.shp" % context.config("data_path"))
+    center = gpd.read_file("%s/spatial/SC2010_RMSP_CEM_V3_center.shp" % context.config("data_path"))
     center["AP_2010_CH"] = center["AP_2010_CH"].astype(np.int)
     center = center["AP_2010_CH"].values.tolist()
 
-    city = gpd.read_file("%s/Spatial/SC2010_RMSP_CEM_V3_city.shp" % context.config("data_path")) 
+    city = gpd.read_file("%s/spatial/SC2010_RMSP_CEM_V3_city.shp" % context.config("data_path")) 
     city["AP_2010_CH"] = city["AP_2010_CH"].astype(np.int)
     city = city["AP_2010_CH"].values.tolist()
 

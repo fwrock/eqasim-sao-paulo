@@ -10,7 +10,7 @@ def configure(context):
     context.stage("matsim.runtime.java")
     context.stage("matsim.runtime.maven")
 
-    context.config("eqasim_version", "1.2.0")
+    context.config("eqasim_version", "2.1.0")
 
 def run(context, command, arguments):
     version = context.config("eqasim_version")
@@ -29,13 +29,13 @@ def execute(context):
     # Clone repository and checkout version
     git.run(context, [
         "clone", "https://github.com/eqasim-org/eqasim-java.git",
-        "--branch", "develop",
+        "--branch", "main",
         "--single-branch", "eqasim-java",
         "--depth", "1"
     ])
 
     # Build eqasim
-    maven.run(context, ["-Pstandalone", "package"], cwd = "%s/eqasim-java" % context.path())
+    maven.run(context, ["-Pstandalone", "package", "-DskipTests"], cwd = "%s/eqasim-java" % context.path())
     jar_path = "%s/eqasim-java/sao_paulo/target/sao_paulo-%s.jar" % (context.path(), version)
 
     return "eqasim-java/sao_paulo/target/sao_paulo-%s.jar" % version

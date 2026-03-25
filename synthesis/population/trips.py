@@ -18,7 +18,7 @@ def execute(context):
     df_trips = df_trips[[
         "person_id", "trip_id", "departure_time", "arrival_time", "mode", "preceeding_purpose", "following_purpose"
     ]]
-    df_trips.to_csv("%s/HTS/trips.csv" %  context.config("data_path"))
+    df_trips.to_csv("%s/hts/trips.csv" %  context.config("data_path"))
     assert(len(df_trips) == len(df_trips.dropna()))
 
     df_trips = df_trips.sort_values(by = ["person_id", "trip_id"])

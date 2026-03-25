@@ -1,25 +1,39 @@
-name: sao_paulo
+name: eqasim
 
 channels:
-  - defaults
+  - conda-forge
 
 dependencies:
-  - matplotlib=3.1.3
-  - pandas=1.0.3
-  - scipy=1.4.1
-  - numpy=1.18.1
-  - geopandas=0.6.1
-  - numba=0.49.0
-  - palettable=3.3.0
-  - scikit-learn=0.22.1
-  - shapely=1.7.0
-  - tqdm=4.46.0
-  - pytables=3.6.1
-  - xlrd=1.2.0
-  - pip=20.0.2
+  - python=3.7
+
+  # Core (ajustado)
+  - numpy=1.21
+  - pandas=1.3
+  - scipy=1.7
+  - matplotlib=3.5
+
+  # Geo stack consistente
+  - geopandas=0.9
+  - shapely=1.7.1
+  - fiona=1.8.20
+  - gdal=3.2
+  - pyproj=3.2
+  - proj
+  - proj-data
+  - libtiff
+
+  # ML / utils
+  - scikit-learn=0.24
+  - numba=0.53
+  - tqdm
+  - pytables
+  - xlrd
+  - palettable
+
+  - pip
   - pip:
-    - synpp==1.2.2
-    - pyreadstat==0.3.4 
-    - simpledbf==0.2.6
-    - osmium==3.0.0
-    - gtfsmerger==0.1.6
+      - synpp==1.2.2
+      - pyreadstat==0.3.4
+      - simpledbf==0.2.6
+      - osmium==3.0.0
+      - gtfsmerger==0.1.6

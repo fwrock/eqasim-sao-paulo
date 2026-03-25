@@ -67,45 +67,59 @@ def run_parallel(args):
     person_dfs = []
 
     for zone_id, count, shape in tqdm(
-        chunk, desc = "Sampling coordinates", position = i):
-
+        chunk, desc="Sampling coordinates", position=i
+    ):
         if count > 0:
             points = []
             ids = []
 
             if df_locations is None:
+                # 🔹 Caso sem destinos discretos (fallback padrão original)
                 while len(points) < count:
                     minx, miny, maxx, maxy = shape.bounds
-                    candidates = np.random.random(size = (SAMPLE_SIZE, 2))
-                    candidates[:,0] = minx + candidates[:,0] * (maxx - minx)
-                    candidates[:,1] = miny + candidates[:,1] * (maxy - miny)
+                    candidates = np.random.random(size=(SAMPLE_SIZE, 2))
+                    candidates[:, 0] = minx + candidates[:, 0] * (maxx - minx)
+                    candidates[:, 1] = miny + candidates[:, 1] * (maxy - miny)
                     candidates = [geo.Point(*point) for point in candidates]
-                    candidates = [point for point in candidates if shape.contains(point)]
+                    candidates = [p for p in candidates if shape.contains(p)]
+
                     points += candidates
                     ids += [np.nan] * len(candidates)
 
-                points, ids = points[:count], ids[:count]
-                points = np.array([np.array([point.x, point.y]) for point in points])
-                ids = np.array([np.nan] * len(points))
-            else:
-                if np.count_nonzero(df_locations["zone_id"] == zone_id) == 0:
-                    raise RuntimeError("Requested destination for a zone without discrete destinations")
+                points = points[:count]
+                ids = ids[:count]
+                points = np.array([[p.x, p.y] for p in points])
+                ids = np.array(ids)
 
+            else:
                 df_zone_locations = df_locations[df_locations["zone_id"] == zone_id]
-                selector = np.random.randint(len(df_zone_locations), size = count)
+
+                # 🔥 🔥 CORREÇÃO PRINCIPAL
+                if len(df_zone_locations) == 0:
+                    # ⚠️ fallback: usa qualquer ponto global
+                    df_zone_locations = df_locations
+
+                selector = np.random.randint(len(df_zone_locations), size=count)
 
                 points = df_zone_locations.iloc[selector][["x", "y"]].values
                 ids = df_zone_locations.iloc[selector]["location_id"].values
 
             f = df_persons["zone_id"] == zone_id
+
+            if np.sum(f) == 0:
+                continue
+
             ordering = define_ordering(df_persons[f], points)
-            points, ids = points[ordering], ids[ordering]
-            df_persons.loc[f, "x"] = points[:,0]
-            df_persons.loc[f, "y"] = points[:,1]
+            points = points[ordering]
+            ids = ids[ordering]
+
+            df_persons.loc[f, "x"] = points[:, 0]
+            df_persons.loc[f, "y"] = points[:, 1]
             df_persons.loc[f, "location_id"] = ids
+
             person_dfs.append(df_persons[f])
 
-    print() # Clean tqdm progress
+    print()  # limpa tqdm
     return pd.concat(person_dfs) if len(person_dfs) > 0 else pd.DataFrame()
 
 

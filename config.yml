@@ -2,7 +2,7 @@
 ## based on the synpp package
 
 # This is the path to a directory where the pipeline can store temporary data
-working_directory: /nas/balacm/SaoPauloSynPP/cache_test
+working_directory: /workspace/cache
 
 # This section defines which parts of the pipeline should be run
 run:
@@ -16,9 +16,10 @@ run:
   #- synthesis.output # To create the output population in the output_path (see below)
   #- synthesis.population.spatial.locations
   #- synthesis.population.activities
-  #- matsim.scenario.population
-  #- matsim.scenario.supply.processed
-  #- matsim.scenario.supply.osm
+  
+  - matsim.scenario.population
+  - matsim.scenario.supply.processed
+  - matsim.scenario.supply.osm
   - matsim.runtime.eqasim
   - matsim.output # Uncomment, if you want to run the full simulation (you'll need Java for that)
   #- analysis.analysis
@@ -33,8 +34,9 @@ config:
   random_seed: 1234
 
   # Paths to the input data and where the output should be stored
-  data_path: /nas/balacm/Data_SP
-  output_path: /nas/balacm/SaoPauloSynPP/output
+  data_path: /workspace/data
+  output_path: /workspace/output
+  analysis_path: /workspace/analysis
 
   shapefile_name: "SC2010_RMSP_CEM_V3_all_state.shp"
   shapefile_center_name: "SC2010_RMSP_CEM_V3_center.shp"
@@ -46,6 +48,3 @@ config:
 
   # Only interesting if you run the simulation
   java_memory: 80G
-
-  # Only interesting if the analysis script is run
-  analysis_path: /nas/balacm/SaoPauloSynPP/Analysis
