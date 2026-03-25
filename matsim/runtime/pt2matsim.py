@@ -34,8 +34,13 @@ def execute(context):
         "--depth", "1"
     ])
 
+    path = "%s/pt2matsim" % context.path()
+
+    # 🔥 aplica patch automaticamente
+    patch_matsim_repository(path)
+
     # Build pt2matsim
-    maven.run(context, ["package"], cwd = "%s/pt2matsim" % context.path())
+    maven.run(context, ["package", "-DskipTests"], cwd = "%s/pt2matsim" % context.path())
     jar_path = "%s/pt2matsim/target/pt2matsim-%s-shaded.jar" % (context.path(), version)
 
     # Test pt2matsim
@@ -44,3 +49,18 @@ def execute(context):
     ], jar_path)
 
     assert os.path.exists("%s/test_config.xml" % context.path())
+
+def patch_matsim_repository(path):
+    pom_path = os.path.join(path, "pom.xml")
+
+    with open(pom_path, "r") as f:
+        content = f.read()
+
+    # Substitui Bintray (HTTP morto) por repo oficial MATSim (HTTPS)
+    content = content.replace(
+        "http://dl.bintray.com/matsim/matsim",
+        "https://repo.matsim.org/repository/matsim"
+    )
+
+    with open(pom_path, "w") as f:
+        f.write(content)

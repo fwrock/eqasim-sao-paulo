@@ -27,8 +27,8 @@ def import_data_synthetic(context):
 
 def import_data_actual(context):
     # Actual data
-    df_act_trips = pd.read_csv("%s/HTS/tripsHTS.csv" % context.config("data_path"), sep=",")
-    df_act_persons = pd.read_csv("%s/HTS/personsHTS.csv" % context.config("data_path"), sep=",")
+    df_act_trips = pd.read_csv("%s/hts/tripsHTS.csv" % context.config("data_path"), sep=",")
+    df_act_persons = pd.read_csv("%s/hts/personsHTS.csv" % context.config("data_path"), sep=",")
   
     # Processing actual data
     df_act_trips.rename(columns = {"following_purpose": "destination_purpose", "preceeding_purpose": "origin_purpose"}, inplace = True)

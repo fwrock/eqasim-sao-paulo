@@ -15,11 +15,11 @@ def execute(context):
     CHUNK_SIZE = 500000 
 
     # Read the file in chunks
-    reader = pyreadstat.read_file_in_chunks(pyreadstat.read_sav, "%s/Census/%s" % (context.config("data_path"), context.config("census_file")), chunksize= CHUNK_SIZE, usecols=columns)
-    #reader = pd.read_spss("%s/Census/Censo.2010.brasil.amostra.10porcento.sav" % context.config("data_path"))
+    reader = pyreadstat.read_file_in_chunks(pyreadstat.read_sav, "%s/census/%s" % (context.config("data_path"), context.config("census_file")), chunksize= CHUNK_SIZE, usecols=columns)
+    #reader = pd.read_spss("%s/census/Censo.2010.brasil.amostra.10porcento.sav" % context.config("data_path"))
 
     # Get column names and create output dataframe
-    df, meta = pyreadstat.read_sav("%s/Census/%s" % (context.config("data_path"), context.config("census_file")), row_offset=1, row_limit=1,usecols=columns)
+    df, meta = pyreadstat.read_sav("%s/census/%s" % (context.config("data_path"), context.config("census_file")), row_offset=1, row_limit=1,usecols=columns)
     df_census = pd.DataFrame(columns = df.columns)
     
     # Fill in the output dataframe with relevant observations from chunks
@@ -63,7 +63,7 @@ def execute(context):
 
 
 def validate(context):
-    if not os.path.exists("%s/Census/Censo.2010.brasil.amostra.10porcento.sav" % context.config("data_path")):
+    if not os.path.exists("%s/census/Censo.2010.brasil.amostra.10porcento.sav" % context.config("data_path")):
         raise RuntimeError("Census 2010 not available.")
 
-    return os.path.getsize("%s/Census/Censo.2010.brasil.amostra.10porcento.sav" % context.config("data_path"))
+    return os.path.getsize("%s/census/Censo.2010.brasil.amostra.10porcento.sav" % context.config("data_path"))

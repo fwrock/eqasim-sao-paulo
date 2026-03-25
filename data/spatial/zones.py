@@ -9,7 +9,7 @@ def configure(context):
 
 def execute(context):
     
-    df_zones_census = gpd.read_file("%s/Spatial/%s" % (context.config("data_path"), context.config("shapefile_name")))
+    df_zones_census = gpd.read_file("%s/spatial/%s" % (context.config("data_path"), context.config("shapefile_name")))
     df_zones_census.crs = {"init":"epsg:4326"}
     df_zones_census_dissolved = df_zones_census#.dissolve(by='AP_2010_CH') 
     df_zones_census_dissolved = df_zones_census_dissolved[['geometry', 'AP_2010_CH']]

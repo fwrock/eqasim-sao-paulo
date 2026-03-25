@@ -9,6 +9,7 @@ simulation and run it in a third step:
 - [Gathering the data](#section-data)
 - [Running the pipeline](#section-data)
 - *(Optional)* [Running the simulation](#section-simulation)
+- *(Recommended)* [Running the pipeline and simulation with docker](#section-simulation-docker)
 
 ## <a name="section-data"></a>Gathering the data
 
@@ -23,11 +24,12 @@ Census data containing the socio-demographic information of people living in
 Brasil is available at the website of Centro de Estudos da Metrópole:
 
 - [Census data](http://centrodametropole.fflch.usp.br/pt-br/controle-acesso)
+- [Census data download from Google Drive](https://drive.google.com/file/d/1ybFXP3pyeFEn1yMJq84g-XPiQabymAwF/view) (This link is shared by [FFLCH-USP](http://centrodametropole.fflch.usp.br))
 - You need to register with your email, name and institution email before
 you can use the service
 - Select the data under censo demographico 2010
 - Download Bancos de microdados da amostra do Censo Demográfico 2010
-- Copy the contents of the *zip* file into the folder `data/Census`
+- Copy the contents of the *zip* file into the folder `data/census`
 
 ### 2) Sao Paulo household travel survey (OD 2017)
 
@@ -35,7 +37,7 @@ The Sao Paulo household travel survey is available from Transportes Metropolitan
 
 - [Sao Paulo household travel survey](http://www.metro.sp.gov.br/pesquisa-od/)
 - Download Banco de Dados zip file
-- Put the downloaded contents of the *zip* file int othe folder `data/HTS`.
+- Put the downloaded contents of the *zip* file int othe folder `data/hts`.
 
 ### 3) OpenStreetMap data
 
@@ -49,7 +51,7 @@ the installation instructions. You would need a polygon
 file describing the boundaries of the region, which you can find also [here](../resources) called sao_paulo.poly. 
 - The following command using osmosis can be used to cut-out a Sao Paulo region:
 ```
-osmosis --read-pbf file="sudeste-latest.osm.pbf" --bounding-polygon file="sao_paulo.poly" --write-pbf file="sao_paulo.osm.pbf"
+osmosis --read-pbf file="sudeste-latest.osm.pbf" --bounding-polygon file="sao_paulo.poly" completeWays=yes --write-pbf file="sao_paulo.osm.pbf"
 ```
 - Cut-out Sao Paulo region and place sao_paulo.osm.pbf file in `data/osm`
 
@@ -108,39 +110,40 @@ in calendar.txt in order to overlap with sptrans calendar.txt dates
 
 Your folder structure should now have at least the following files:
 
-- `data/Census/Censo.2010.brasil.amostra.10porcento.sav`
-- `data/HTS/OD_2017.dbf`
+- `data/census/Censo.2010.brasil.amostra.10porcento.sav`
+- `data/hts/OD_2017.dbf`
 - `data/osm/sao_paulo.osm.pbf`
 - `data/escolas_enderecos.csv`
-- `data/Spatial/SC2010_RMSP_CEM_V3.cpg`
-- `data/Spatial/SC2010_RMSP_CEM_V3.shp`
-- `data/Spatial/SC2010_RMSP_CEM_V3.dbf`
-- `data/Spatial/SC2010_RMSP_CEM_V3.prj`
-- `data/Spatial/SC2010_RMSP_CEM_V3.shx`
-- `data/Spatial/SC2010_RMSP_CEM_V3_center.cpg`
-- `data/Spatial/SC2010_RMSP_CEM_V3_center.shp`
-- `data/Spatial/SC2010_RMSP_CEM_V3_center.dbf`
-- `data/Spatial/SC2010_RMSP_CEM_V3_center.prj`
-- `data/Spatial/SC2010_RMSP_CEM_V3_center.shx`
-- `data/Spatial/SC2010_RMSP_CEM_V3_city.cpg`
-- `data/Spatial/SC2010_RMSP_CEM_V3_city.shp`
-- `data/Spatial/SC2010_RMSP_CEM_V3_city.dbf`
-- `data/Spatial/SC2010_RMSP_CEM_V3_city.prj`
-- `data/Spatial/SC2010_RMSP_CEM_V3_city.shx`
-- `data/Spatial/SC2010_RMSP_CEM_V3_all_state.cpg`
-- `data/Spatial/SC2010_RMSP_CEM_V3_all_state.shp`
-- `data/Spatial/SC2010_RMSP_CEM_V3_all_state.dbf`
-- `data/Spatial/SC2010_RMSP_CEM_V3_all_state.prj`
-- `data/Spatial/SC2010_RMSP_CEM_V3_all_state.shx`
+- `data/spatial/SC2010_RMSP_CEM_V3.cpg`
+- `data/spatial/SC2010_RMSP_CEM_V3.shp`
+- `data/spatial/SC2010_RMSP_CEM_V3.dbf`
+- `data/spatial/SC2010_RMSP_CEM_V3.prj`
+- `data/spatial/SC2010_RMSP_CEM_V3.shx`
+- `data/spatial/SC2010_RMSP_CEM_V3_center.cpg`
+- `data/spatial/SC2010_RMSP_CEM_V3_center.shp`
+- `data/spatial/SC2010_RMSP_CEM_V3_center.dbf`
+- `data/spatial/SC2010_RMSP_CEM_V3_center.prj`
+- `data/spatial/SC2010_RMSP_CEM_V3_center.shx`
+- `data/spatial/SC2010_RMSP_CEM_V3_city.cpg`
+- `data/spatial/SC2010_RMSP_CEM_V3_city.shp`
+- `data/spatial/SC2010_RMSP_CEM_V3_city.dbf`
+- `data/spatial/SC2010_RMSP_CEM_V3_city.prj`
+- `data/spatial/SC2010_RMSP_CEM_V3_city.shx`
+- `data/spatial/SC2010_RMSP_CEM_V3_all_state.cpg`
+- `data/spatial/SC2010_RMSP_CEM_V3_all_state.shp`
+- `data/spatial/SC2010_RMSP_CEM_V3_all_state.dbf`
+- `data/spatial/SC2010_RMSP_CEM_V3_all_state.prj`
+- `data/spatial/SC2010_RMSP_CEM_V3_all_state.shx`
 
 
 If you want to run the simulation, there should be also the following files:
 
 - `data/osm/sao_paulo.osm.gz`
-- `data/gtfs/emtu.zip`
-- `data/gtfs/sptrans.zip`
+- `data/gtfs/emtu.zip` (extract to emtu/ folder `data/gtfs/emtu/`)
+- `data/gtfs/sptrans.zip`(extract to sptrans/ folder `data/gtfs/sptrans/*`)
 
-## <a name="section-population">Running the pipeline
+
+## <a name="section-population">Running the pipeline</a>
 
 The pipeline code is available in [this repository](https://github.com/eqasim-org/sao_paulo).
 To use the code, you have to clone the repository with `git`:
@@ -219,7 +222,7 @@ activities, but in the spatial *GPKG* format. Activities contain point
 geometries to indicate where they happen and the trips file contains line
 geometries to indicate origin and destination of each trip.
 
-## <a name="section-simulation">Running the simulation
+## <a name="section-simulation">Running the simulation</a>
 
 The pipeline can be used to generate a full runnable [MATSim](https://matsim.org/)
 scenario and run it for a couple of iterations to test it. For that, you need
@@ -260,3 +263,105 @@ java -Xmx14G -cp sao_paulo-1.2.0.jar org.eqasim.sao_paulo.RunSimulation --config
 
 This will create a `simulation_output` folder (as defined in the `sao_paulo_config.xml`)
 where all simulation is written.
+
+---
+
+## <a name="section-population-docker">Running the pipeline with Docker (recommended)</a>
+
+The Dockerfile contains all necessary dependencies to run the pipeline and MATSim simulation in an isolated environment.
+
+### Step 1: Build the Docker image
+
+Build the Docker image from the project root directory:
+
+```bash
+docker build -t eqasim-sp .
+```
+
+This may take several minutes on the first build.
+
+### Step 2: Configure the pipeline
+
+Open `config.yml` and adjust the `run` section based on your goal:
+
+#### Option A: Generate population data only
+
+Uncomment the following stages to create the synthetic population:
+
+```yaml
+run:
+  - data.census.raw
+  - data.spatial.zones
+  - data.hts.cleaned
+  - synthesis.population.trips
+  - synthesis.population.spatial.by_person.primary_zones
+  - synthesis.population.spatial.by_person.primary_locations
+  - synthesis.population.spatial.by_person.secondary.locations
+  - synthesis.output
+  - synthesis.population.spatial.locations
+  - synthesis.population.activities
+```
+
+#### Option B: Run the MATSim simulation
+
+**Note:** You must first generate the population data using Option A before running the simulation.
+
+After population generation is complete, modify `config.yml` to comment out the population generation stages and uncomment the simulation stages:
+
+```yaml
+run:
+  #- data.census.raw
+  #- data.spatial.zones
+  #- data.hts.cleaned
+  #- synthesis.population.trips
+  #- synthesis.population.spatial.by_person.primary_zones
+  #- synthesis.population.spatial.by_person.primary_locations
+  #- synthesis.population.spatial.by_person.secondary.locations
+  #- synthesis.output
+  #- synthesis.population.spatial.locations
+  #- synthesis.population.activities
+  - matsim.scenario.population
+  - matsim.scenario.supply.processed
+  - matsim.scenario.supply.osm
+  - matsim.runtime.eqasim
+  - matsim.output
+```
+
+### Step 3: Run the pipeline
+
+Execute the following command from the project root directory:
+
+```bash
+docker run --rm \
+  -v $(pwd):/workspace \
+  -w /workspace \
+  -u $(id -u):$(id -g) \
+  -e MAVEN_OPTS="-Dmaven.repo.local=/workspace/.m2/repository" \
+  -m 300g \
+  eqasim-sp
+```
+
+**Command explanation:**
+- `--rm`: Automatically remove the container when it exits
+- `-v $(pwd):/workspace`: Mount the current directory to `/workspace` in the container
+- `-w /workspace`: Set the working directory to `/workspace`
+- `-u $(id -u):$(id -g)`: Run as your user to avoid permission issues
+- `-e MAVEN_OPTS=...`: Configure Maven to use a local repository in the workspace
+- `-m 300g`: Allocate up to 300GB of memory (adjust based on your system)
+- `eqasim-sp`: The Docker image name
+
+**Note:** The memory allocation (`-m 300g`) should be adjusted based on your system's available RAM. For smaller test scenarios, 32-64GB may be sufficient.
+
+### What to expect
+
+The pipeline will process multiple stages sequentially. Depending on your configuration and system specifications, this can take several hours to complete. Progress will be displayed in the terminal.
+
+Upon successful completion:
+- **Population data** will be available in the `output` folder (CSV and GPKG files)
+- **MATSim scenario files** will be in the `output` folder if you ran the simulation stages
+
+### Troubleshooting
+
+- **Permission errors**: Ensure the `-u $(id -u):$(id -g)` flag is included
+- **Out of memory**: Reduce the `-m` value or increase your system's available memory
+- **Build failures**: Check that all required data files are in the correct directories as described in the data gathering section

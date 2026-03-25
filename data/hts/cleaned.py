@@ -13,7 +13,7 @@ def configure(context):
 
 def execute(context):
 	
-    dbf = Dbf5("%s/HTS/%s" %  (context.config("data_path"), context.config("hts_file") ))
+    dbf = Dbf5("%s/hts/%s" %  (context.config("data_path"), context.config("hts_file") ))
     df = dbf.to_dataframe()
 	
     df_reduced = df[["ID_PESS","ZONA","IDADE","SEXO",
@@ -128,11 +128,11 @@ def execute(context):
     zone_id = df_persons["home_zone"].values.tolist()
 
      # Import shapefiles defining the different zones
-    center = gpd.read_file("%s/Spatial/SC2010_RMSP_CEM_V3_center.shp" % context.config("data_path"))
+    center = gpd.read_file("%s/spatial/SC2010_RMSP_CEM_V3_center.shp" % context.config("data_path"))
     center["AP_2010_CH"] = center["AP_2010_CH"].astype(np.int)
     center = center["AP_2010_CH"].values.tolist()
 
-    city = gpd.read_file("%s/Spatial/SC2010_RMSP_CEM_V3_city.shp" % context.config("data_path")) 
+    city = gpd.read_file("%s/spatial/SC2010_RMSP_CEM_V3_city.shp" % context.config("data_path")) 
     city["AP_2010_CH"] = city["AP_2010_CH"].astype(np.int)
     city = city["AP_2010_CH"].values.tolist()
 
@@ -378,6 +378,6 @@ def execute(context):
     df_persons["is_passenger"] = df_persons["is_passenger"].fillna(False)
     df_persons["is_passenger"] = df_persons["is_passenger"].astype(np.bool)
 
-    df_persons.to_csv("%s/HTS/personsHTS.csv" % context.config("data_path") )
-    df_trips.to_csv("%s/HTS/tripsHTS.csv" % context.config("data_path") )
+    df_persons.to_csv("%s/hts/personsHTS.csv" % context.config("data_path") )
+    df_trips.to_csv("%s/hts/tripsHTS.csv" % context.config("data_path") )
     return df_persons, df_trips

@@ -69,8 +69,8 @@ def plot_poor(cases, boundary, show_nan = False):
     plt.tight_layout()
 
 def execute(context):
-    df_hts = pd.read_csv("%s/HTS/persons_clean_allworkdays_alltogether.csv" % context.config["raw_data_path"])
-    df_census = pd.read_csv("%s/Census/census_cleaned.csv" % context.config["raw_data_path"])
+    df_hts = pd.read_csv("%s/hts/persons_clean_allworkdays_alltogether.csv" % context.config["raw_data_path"])
+    df_census = pd.read_csv("%s/census/census_cleaned.csv" % context.config["raw_data_path"])
     df_census["ratio"] = df_census["householdIncome"] / df_census["numberOfMembers"]
 
     cases = [

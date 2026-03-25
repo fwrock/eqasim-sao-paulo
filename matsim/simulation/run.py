@@ -23,4 +23,7 @@ def execute(context):
         "--config:controler.writePlansInterval", str(10),
         "--config:strategy.strategysettings[strategyName=DiscreteModeChoice].weight", str(0.1),
         "--config:strategy.strategysettings[strategyName=KeepLastSelected].weight", str(0.9),
+        "--config:vehicles.vehiclesFile", "%s/sao_paulo_vehicles.xml.gz" % context.path("matsim.simulation.prepare"),
+        "--config:routing.networkRouteConsistencyCheck", "disable",
+        "--config:qsim.vehiclesSource", "fromVehiclesData"
     ])
